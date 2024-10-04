@@ -1,0 +1,22 @@
+
+> web@0.0.0 build
+> ng build
+
+[33m>[39m Building...
+[32m√[39m Building...
+[1mInitial chunk files[22m  [2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mmain-G26SNHN5.js[39m     [2m | [22m[2mmain[22m         [2m | [22m[36m206.62 kB[39m[2m | [22m               [36m55.70 kB[39m
+[32mpolyfills-OEPZ4W45.js[39m[2m | [22m[2mpolyfills[22m    [2m | [22m [36m34.52 kB[39m[2m | [22m               [36m11.28 kB[39m
+[32mstyles-5INURTSO.css[39m  [2m | [22m[2mstyles[22m       [2m | [22m  [36m0 bytes[39m[2m | [22m                [36m0 bytes[39m
+
+[1m [22m                    [2m | [22m[1mInitial total[22m[2m | [22m[1m241.14 kB[22m[2m | [22m               [1m66.98 kB[22m
+
+Application bundle generation complete. [6.829 seconds]
+
+Output location: C:\Users\toant\Downloads\interview\apps\web\dist\client
+
+npm notice
+npm notice New minor version of npm available! 10.8.2 -> 10.9.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v10.9.0
+npm notice To update run: npm install -g npm@10.9.0
+npm notice

@@ -1,0 +1,11 @@
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["apps/*/dist/**", "apps/*/build/**"]
+    },
+    "dev": {
+      "cache": false
+    }
+  }
+}

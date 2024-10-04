@@ -1,0 +1,21 @@
+{
+  "name": "interview",
+  "private": false,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev:server": "turbo run dev --filter=server",
+    "dev:web": "turbo run dev --filter=web",
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:server\""
+  },
+  "dependencies": {
+    "turbo": "latest"
+  },
+  "packageManager": "npm@10.2.1",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
