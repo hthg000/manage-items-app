@@ -1,7 +1,7 @@
 import { InternalServerErrorException } from '@nestjs/common';
 
 export class OperationFailureException extends InternalServerErrorException {
-  constructor(operation: string, productId?: number) {
-    super(`Failed to ${operation} product${productId ? ` with ID ${productId}` : ''}`);
+  constructor(entity: string, operation: string, id?: number) {
+    super(`Failed to ${operation} ${entity}${id ? ` with ID ${id}` : ''}`);
   }
 }

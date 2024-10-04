@@ -4,7 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
-import { ProductNotFoundException } from 'src/common/exceptions/product-not-found.exception';
+import { CustomNotFoundException } from 'src/common/exceptions/not-found.exception';
 import { OperationFailureException } from 'src/common/exceptions/operation-failure.exception';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class ProductService {
       const item = this.productRepository.create(createProductDto);
       return this.productRepository.save(item);
     } catch (error) {
-      throw new OperationFailureException('create');
+      throw new OperationFailureException('product', 'create');
     }
   }
 
@@ -30,7 +30,7 @@ export class ProductService {
   async findOne(id: number): Promise<Product> {
     const product = await this.productRepository.findOneBy({ id });
     if (!product) {
-      throw new ProductNotFoundException(id);
+      throw new CustomNotFoundException('product', id);
     }
     return product;
   }
@@ -38,26 +38,26 @@ export class ProductService {
   async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
     const product = await this.productRepository.findOneBy({ id });
     if (!product) {
-      throw new ProductNotFoundException(id);
+      throw new CustomNotFoundException('product', id);
     }
     try {
       Object.assign(product, updateProductDto)
       return this.productRepository.save(product);
     } catch (error) {
-      throw new OperationFailureException('update', id);
+      throw new OperationFailureException('product', 'update', id);
     }
   }
 
   async remove(id: number): Promise<{ message: string }> {
     const product = await this.productRepository.findOneBy({ id });
     if (!product) {
-      throw new ProductNotFoundException(id);
+      throw new CustomNotFoundException('product', id);
     }
     try {
       await this.productRepository.delete(id);
       return { message: `Product with ID ${id} deleted successfully` };
     } catch (error) {
-      throw new OperationFailureException('delete', id);
+      throw new OperationFailureException('product', 'delete', id);
     }
   }
 }
