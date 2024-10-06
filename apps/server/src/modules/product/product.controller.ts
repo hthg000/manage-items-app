@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus, Query, UsePipes } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -6,6 +6,7 @@ import { buildPaginationOptions } from 'src/common/utils/pagination.util';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { CustomParseFloatPipe } from 'src/common/pipes/parse-float.pipe';
 import { fileUploadInterceptor } from 'src/common/utils/file-upload.utils';
+import { PriceValidationPipe } from 'src/common/pipes/price_validation.pipe';
 
 @Controller('products')
 export class ProductController {
@@ -13,6 +14,7 @@ export class ProductController {
 
   @Post()
   @UseInterceptors(fileUploadInterceptor())
+  // @UsePipes(new PriceValidationPipe())
   async create(
     @UploadedFile(new ParseFilePipeBuilder()
       .addFileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/, })
