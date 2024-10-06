@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OperationFailureException } from 'src/common/exceptions/operation-failure.exception';
 import { CustomNotFoundException } from 'src/common/exceptions/not-found.exception';
+import { Pagination, PaginationOptions } from 'src/common/utils/pagination.util';
 
 @Injectable()
 export class CategoryService {
@@ -23,8 +24,10 @@ export class CategoryService {
     }
   }
 
-  findAll(): Promise<Category[]> {
-    return this.categoriesRepository.find();
+  async findAll(options: PaginationOptions): Promise<{ data: Category[]; total: number }> {
+    const queryBuilder = this.categoriesRepository.createQueryBuilder('entity');
+    const [result, total] = await Pagination.paginate(queryBuilder, options);
+    return { data: result, total };
   }
 
   async findOne(id: number): Promise<Category> {

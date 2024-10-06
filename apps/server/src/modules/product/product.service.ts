@@ -6,6 +6,7 @@ import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { CustomNotFoundException } from 'src/common/exceptions/not-found.exception';
 import { OperationFailureException } from 'src/common/exceptions/operation-failure.exception';
+import { Pagination, PaginationOptions } from 'src/common/utils/pagination.util';
 
 @Injectable()
 export class ProductService {
@@ -23,8 +24,14 @@ export class ProductService {
     }
   }
 
-  findAll(): Promise<Product[]> {
-    return this.productRepository.find();
+  async findAll(options: PaginationOptions): Promise<{ data: Product[]; total: number }> {
+    const queryBuilder = this.productRepository.createQueryBuilder('product');
+
+    // Include soft-deleted records
+    // queryBuilder.withDeleted();
+
+    const [result, total] = await Pagination.paginate(queryBuilder, options);
+    return { data: result, total };
   }
 
   async findOne(id: number): Promise<Product> {
@@ -48,13 +55,13 @@ export class ProductService {
     }
   }
 
-  async remove(id: number): Promise<{ message: string }> {
+  async softDelete(id: number): Promise<{ message: string }> {
     const product = await this.productRepository.findOneBy({ id });
     if (!product) {
       throw new CustomNotFoundException('product', id);
     }
     try {
-      await this.productRepository.delete(id);
+      await this.productRepository.softDelete(id);
       return { message: `Product with ID ${id} deleted successfully` };
     } catch (error) {
       throw new OperationFailureException('product', 'delete', id);

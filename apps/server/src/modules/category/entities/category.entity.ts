@@ -10,4 +10,7 @@ export class Category {
     @IsNotEmpty()
     @IsString()
     name: string;
+
+    @Column({ nullable: true })
+    description: string;
 }
