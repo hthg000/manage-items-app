@@ -30,37 +30,37 @@ export class CategoryService {
     return { data: result, total };
   }
 
-  async findOne(id: number): Promise<Category> {
-    const category = await this.categoriesRepository.findOneBy({ id });
+  async findOne(category_id: number): Promise<Category> {
+    const category = await this.categoriesRepository.findOneBy({ category_id });
     if (!category) {
-      throw new CustomNotFoundException('category', id);
+      throw new CustomNotFoundException('category', category_id);
     }
     return category;
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
-    const category = await this.categoriesRepository.findOneBy({ id });
+  async update(category_id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
+    const category = await this.categoriesRepository.findOneBy({ category_id });
     if (!category) {
-      throw new CustomNotFoundException('category', id);
+      throw new CustomNotFoundException('category', category_id);
     }
     try {
       Object.assign(category, updateCategoryDto)
       return this.categoriesRepository.save(category);
     } catch (error) {
-      throw new OperationFailureException('category', 'update', id);
+      throw new OperationFailureException('category', 'update', category_id);
     }
   }
 
-  async remove(id: number): Promise<{ message: string }> {
-    const category = await this.categoriesRepository.findOneBy({ id });
+  async remove(category_id: number): Promise<{ message: string }> {
+    const category = await this.categoriesRepository.findOneBy({ category_id });
     if (!category) {
-      throw new CustomNotFoundException('category', id);
+      throw new CustomNotFoundException('category', category_id);
     }
     try {
-      await this.categoriesRepository.delete(id);
-      return { message: `category with ID ${id} deleted successfully` };
+      await this.categoriesRepository.delete(category_id);
+      return { message: `category with ID ${category_id} deleted successfully` };
     } catch (error) {
-      throw new OperationFailureException('category', 'delete', id);
+      throw new OperationFailureException('category', 'delete', category_id);
     }
   }
 }

@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Upl
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { buildPaginationOptions } from 'src/common/utils/pagination.util';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { CustomParseFloatPipe } from 'src/common/pipes/parse-float.pipe';
@@ -40,14 +39,16 @@ export class ProductController {
   }
 
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(fileUploadInterceptor())
   async update(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
     @Body() updateProductDto: UpdateProductDto,
-    @Body('price', CustomParseFloatPipe) price: number,
+    @Body('price', CustomParseFloatPipe) price?: number,
   ) {
-    updateProductDto.price = price;
+    if (price !== undefined) { // Only update if price provided
+      updateProductDto.price = price;
+    }
     if (file) {
       updateProductDto.image_path = `/uploads/${file.filename}`
     }
