@@ -1,40 +1,41 @@
-import { SelectQueryBuilder } from 'typeorm';
-import { PaginationDto } from '../dtos/pagination.dto';
+import { SelectQueryBuilder } from 'typeorm'
+import { PaginationDto } from '../dtos/pagination.dto'
 
 export class PaginationOptions {
-  page: string;
-  limit: string;
-  sort?: string;
-  filter?: string;
+	page: string
+	limit: string
+	sort?: string
+	search?: string
 }
 
 export function buildPaginationOptions(paginationDto: PaginationDto): PaginationOptions {
-  return {
-    page: paginationDto.page,
-    limit: paginationDto.limit,
-    sort: paginationDto.sort,
-    filter: paginationDto.filter,
-  };
+	return {
+		page: paginationDto.page,
+		limit: paginationDto.limit,
+		sort: paginationDto.sort,
+		search: paginationDto.search
+	}
 }
 
 export class Pagination {
-  static paginate<T>(queryBuilder: SelectQueryBuilder<T>, options: PaginationOptions) {
-    const { page, limit, sort, filter } = options;
+	static paginate<T>(queryBuilder: SelectQueryBuilder<T>, options: PaginationOptions) {
+		const { page, limit, sort, search } = options
 
-    // Convert page and limit to integers
-    const pageNumber = parseInt(page as unknown as string, 10);
-    const limitNumber = parseInt(limit as unknown as string, 10);
+		// Convert page and limit to integers
+		const pageNumber = parseInt(page as unknown as string, 10)
+		const limitNumber = parseInt(limit as unknown as string, 10)
 
-    if (filter) {
-      queryBuilder.where('entity.someField LIKE :filter', { filter: `%${filter}%` });
-    }
+		if (search) {
+			queryBuilder.where('product.product_name LIKE :search', { search: `%${search}%` })
+		}
 
-    if (sort) {
-      queryBuilder.orderBy(`entity.${sort}`);
-    }
+		if (sort) {
+			const sortDirection = sort ? 'ASC' : 'DESC';
+			queryBuilder.orderBy(`product.product_name`, sortDirection);
+		}
 
-    queryBuilder.skip((pageNumber - 1) * limitNumber).take(limitNumber);
+		queryBuilder.skip((pageNumber - 1) * limitNumber).take(limitNumber)
 
-    return queryBuilder.getManyAndCount();
-  }
+		return queryBuilder.getManyAndCount()
+	}
 }

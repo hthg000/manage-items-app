@@ -1,0 +1,29 @@
+::ng-deep .ant-pagination-next .ant-pagination-item-link,
+::ng-deep .ant-pagination-prev .ant-pagination-item-link {
+	border-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgba(255, 255, 255, 70%);
+}
+::ng-deep .ant-pagination-option {
+	background: rgba(255, 255, 255, 70%);
+}
+::ng-deep .ant-pagination-item {
+	background: rgba(255, 255, 255, 70%);
+}
+::ng-deep .ant-select:not(.ant-select-customize-input) .ant-select-selector,
+::ng-deep .ant-pagination-item {
+	border-radius: 5px;
+}
+[nz-button] {
+	margin-right: 8px;
+	margin-bottom: 8px;
+}
+::ng-deep .ant-rate-star-second .anticon {
+	color: #ee4d2d;
+	font-size: 14px;
+}
+::ng-deep .ant-rate-star:not(:last-child) {
+	margin-right: 2px;
+}

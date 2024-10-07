@@ -1,41 +1,62 @@
-import { IsNotEmpty, IsNumber, IsString, Min } from "class-validator";
-import { Category } from "src/modules/category/entities/category.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { IsNotEmpty, IsNumber, Min } from 'class-validator'
+import { Category } from 'src/modules/category/entities/category.entity'
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
 
 @Entity()
 export class Product {
-    @PrimaryGeneratedColumn()
-    product_id: number;
+	@PrimaryGeneratedColumn()
+	product_id: number
 
-    @Column()
-    @IsNotEmpty()
-    product_name: string;
+	@Column()
+	@IsNotEmpty()
+	product_name: string
 
-    @Column({ nullable: true })
-    description: string;
+	@Column({ nullable: true })
+	description: string
 
-    @Column('decimal')
-    @IsNotEmpty()
-    @IsNumber()
-    @Min(0)
-    price: number;
+	@Column('decimal')
+	@IsNotEmpty()
+	@IsNumber()
+	@Min(0)
+	price: number
 
-    @Column({ nullable: true })
-    category_id: number;
+	@Column()
+	@IsNumber()
+	historical_sold: number
 
-    @ManyToOne(() => Category, (category) => category.products)
-    @JoinColumn({ name: 'category_id' })
-    category: Category;
+	@Column()
+	@IsNumber()
+	stock: number
 
-    @Column({ nullable: true })
-    image_path: string;
+	@Column()
+	@IsNumber()
+	discount: string
 
-    @CreateDateColumn({ type: 'timestamp' })
-    created_at: Date;
+	@Column({ nullable: true })
+	category_id: number
 
-    @UpdateDateColumn({ type: 'timestamp' })
-    updated_at: Date;
+	@ManyToOne(() => Category, (category) => category.products)
+	@JoinColumn({ name: 'category_id' })
+	category: Category
 
-    @DeleteDateColumn() // This column is used for soft deletes
-    deleted_at?: Date;
+	@Column({ nullable: true })
+	image_path: string
+
+	@CreateDateColumn({ type: 'timestamp' })
+	created_at: Date
+
+	@UpdateDateColumn({ type: 'timestamp' })
+	updated_at: Date
+
+	@DeleteDateColumn() // This column is used for soft deletes
+	deleted_at?: Date
 }

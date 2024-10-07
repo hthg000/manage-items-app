@@ -1,0 +1,413 @@
+<app-confirm #Confirm></app-confirm>
+<app-product-popup #productPopup></app-product-popup>
+<mat-progress-bar *ngIf="showProgressBar" mode="determinate" />
+
+<div class="flex-1">
+  <div class="h-[100%]">
+    <div
+      class="w-full flex gap-y-[10px] justify-between items-center flex-wrap"
+    >
+      <div class="search-bar">
+        <input
+          type="text"
+          placeholder="Search products..."
+          (input)="onTypingSearch($event)"
+          (blur)="onSearch()"
+        />
+      </div>
+      <div class="flex items-center justify-center gap-[10px]">
+        <mat-paginator
+          *ngIf="totalItems > 0"
+          class="justify-end bg-[rgba(255, 255 , 255, 90)] w-fit shadow-sm rounded-[5px] mb-[10px]"
+          style="
+            background: rgba(255, 255, 255, 70%);
+            min-height: 50px;
+            margin-bottom: unset;
+          "
+          [length]="totalItems"
+          (page)="onChangePage($event)"
+          [pageSize]="PAGE_SIZE"
+          [pageSizeOptions]="PAGE_OPTIONS"
+        />
+        <button
+          class="w-[fit-content] h-[50px] font-inter text-[16px] font-medium leading-[20px] text-[#687182] px-[10px] rounded"
+          style="background: rgba(255, 255, 255, 70%)"
+        >
+          Add Product
+        </button>
+      </div>
+    </div>
+
+    <table class="mt-[10px]">
+      <thead
+        class="pt-[10px] flex gap-[10px] bg-[rgba(255, 255 , 255, 90)] shadow-sm rounded-[5px] p-[12px] w-[100%] bg-[white]"
+      >
+        <tr class="flex w-full min-w-0">
+          <th
+            class="flex fap-[10px] bg-[rgba(255, 255 , 255, 90)] relative table_sticky table_sticky-left min-w-[110px] w-[150px] max-w-[150px]"
+            [align]="'left'"
+          >
+            <div
+              class="px-[5px] font-inter text-[14px] font-medium leading-[20px] text-[#687182] w-[30px]"
+            >
+              <label> # </label>
+            </div>
+            <div
+              class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] flex-1"
+            >
+              Image
+            </div>
+          </th>
+          <th
+            class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] flex text-start min-w-[250px] w-[250px]"
+          >
+            Name
+          </th>
+          <th
+            class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] flex text-start min-w-[150px] w-[150px]"
+          >
+            <label> Category </label>
+            <svg
+              class="icon-sort"
+              (click)="onSort('category_name', 'ASC')"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill="#687182"
+                d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999l.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
+              />
+            </svg>
+          </th>
+          <th
+            class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] flex text-start min-w-[100px] w-[100px]"
+          >
+            <label> Sold </label>
+            <svg
+              class="icon-sort"
+              (click)="onSort('historical_sold', 'ASC')"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill="#687182"
+                d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999l.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
+              />
+            </svg>
+          </th>
+          <th
+            class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] flex text-start min-w-[100px] w-[100px]"
+          >
+            <label> Stock </label>
+            <svg
+              class="icon-sort"
+              (click)="onSort('stock', 'ASC')"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill="#687182"
+                d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999l.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
+              />
+            </svg>
+          </th>
+          <th
+            class="font-inter gap-[3px] text-[14px] font-medium leading-[20px] text-[#687182] flex text-start min-w-[100px] w-[100px]"
+          >
+            <label> Price </label>
+            <svg
+              class="icon-sort"
+              (click)="onSort('price', 'ASC')"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill="#687182"
+                d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999l.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
+              />
+            </svg>
+          </th>
+          <th
+            class="font-inter gap-[3px] text-[14px] font-medium leading-[20px] text-[#687182] flex text-start min-w-[100px] w-[100px]"
+          >
+            <label> Discount </label>
+            <svg
+              class="icon-sort"
+              (click)="onSort('discount', 'ASC')"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill="#687182"
+                d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999l.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
+              />
+            </svg>
+          </th>
+
+          <th
+            class="font-inter gap-[3px] text-[14px] font-medium leading-[20px] text-[#687182] flex text-start min-w-[300px] w-[300px]"
+          >
+            <label> Description </label>
+            <svg
+              class="icon-sort"
+              (click)="onSort('discount', 'ASC')"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill="#687182"
+                d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999l.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
+              />
+            </svg>
+          </th>
+
+          <th
+            class="font-inter text-[14px] gap-[3px] font-medium leading-[20px] text-[#687182] flex text-start min-w-[125px] w-[125px]"
+          >
+            <label> Created Date </label>
+            <svg
+              class="icon-sort"
+              (click)="onSort('updatedAt', 'ASC')"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill="#687182"
+                d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999l.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
+              />
+            </svg>
+          </th>
+          <th
+            class="font-inter justify-end text-[14px] font-medium leading-[20px] relative table_sticky table_sticky-right text-[#687182] flex min-w-[70px] w-[70px]"
+            [align]="'right'"
+          ></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="dataSources$ | async as dataSources">
+          <ng-container *ngIf="dataSources.length > 0; else noData">
+            <tr
+              class="w-full flex min-w-0 mt-[7px] shadow-sm rounded-[5px] py-[7px] px-[10px]"
+              *ngFor="let data of dataSources; let i = index"
+            >
+              <td
+                class="flex relative table_sticky table_sticky-left min-w-[110px] w-[150px] max-w-[150px]"
+                [align]="'left'"
+              >
+                <div class="w-[100%] flex items-center">
+                  <div
+                    class="py-4 font-inter text-[14px] font-medium leading-[20px] text-[#687182] px-[5px] w-[30px] justify-center flex items-center"
+                  >
+                    {{ i + 1 }}
+                  </div>
+                  <div class="flex items-center gap-[10px] w-full">
+                    <div
+                      class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] px-[5px]"
+                    >
+                      <div
+                        class="bg-cover bg-no-repeat w-[60px] h-[60px] rounded-[5px]"
+                        [style.background-image]="
+                          'url(' + baseEnv + data?.image_path + ')'
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td
+                class="min-h-[60px] flex flex-col gap-[3px] font-inter text-[14px] font-medium text-[#687182] min-w-[250px] w-[250px]"
+              >
+                <span class="text-[#f8482f] flex items-center gap-[5px]">
+                  ID: {{ data?.product_id }}
+                </span>
+                <span
+                  class="word-break"
+                  nz-tooltip
+                  [matTooltip]="data?.product_name"
+                >
+                  {{ data?.product_name }}
+                </span>
+              </td>
+              <!-- category_name -->
+              <td
+                class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] text-start min-w-[150px] w-[150px]"
+              >
+                <ng-container *ngIf="data?.category; else NoCategoryName">
+                  {{ data?.category }}
+                </ng-container>
+                <ng-template #NoCategoryName>N/A</ng-template>
+              </td>
+              <!-- historical_sold -->
+              <td
+                class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] text-start min-w-[100px] w-[100px]"
+              >
+                <ng-container
+                  *ngIf="data?.historical_sold; else NoHistoricalSold"
+                >
+                  {{ data?.historical_sold }}
+                </ng-container>
+                <ng-template #NoHistoricalSold>N/A</ng-template>
+              </td>
+              <!-- stock -->
+              <td
+                class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] text-start min-w-[100px] w-[100px]"
+              >
+                <ng-container *ngIf="data?.stock; else NoStock">
+                  {{ data?.stock }}
+                </ng-container>
+                <ng-template #NoStock>N/A</ng-template>
+              </td>
+              <!-- Price -->
+              <td
+                class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] text-start min-w-[100px] w-[100px]"
+              >
+                <ng-container *ngIf="data?.price; else NoPrice">
+                  {{ data.price.toLocaleString("it-IT") }} đ
+                </ng-container>
+                <ng-template #NoPrice>N/A</ng-template>
+              </td>
+              <!-- Discount -->
+              <td
+                class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] text-start min-w-[100px] w-[100px]"
+              >
+                <ng-container *ngIf="data?.discount; else NoDiscount">
+                  {{ data?.discount }}
+                </ng-container>
+                <ng-template #NoDiscount> N/A </ng-template>
+              </td>
+              <!-- description -->
+
+              <td
+                class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] text-start min-w-[300px] w-[300px]"
+              >
+                <ng-container *ngIf="data?.description; else NoDescription">
+                  {{ data?.description }}
+                </ng-container>
+                <ng-template #NoDescription> N/A </ng-template>
+              </td>
+
+              <!-- Before Discount -->
+              <td
+                class="font-inter text-[14px] font-medium leading-[20px] text-[#687182] text-start min-w-[125px] w-[125px]"
+              >
+                <ng-container *ngIf="data?.created_at; else NoCreatedAt">
+                  {{ data.created_at | date: "dd/MM/yy HH:mm" }}
+                </ng-container>
+                <ng-template #NoCreatedAt> N/A </ng-template>
+              </td>
+              <!-- Actions -->
+              <td
+                class="flex items-center justify-end text-end min-w-[70px] w-[70px] relative table_sticky table_sticky-right"
+                [align]="'right'"
+              >
+                <svg
+                  [matMenuTriggerFor]="menu"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9.5 2C9.5 2.82843 8.82843 3.5 8 3.5C7.17157 3.5 6.5 2.82843 6.5 2C6.5 1.17157 7.17157 0.5 8 0.5C8.82843 0.5 9.5 1.17157 9.5 2Z"
+                    fill="#687182"
+                  />
+                  <path
+                    d="M9.5 8C9.5 8.82843 8.82843 9.5 8 9.5C7.17157 9.5 6.5 8.82843 6.5 8C6.5 7.17157 7.17157 6.5 8 6.5C8.82843 6.5 9.5 7.17157 9.5 8Z"
+                    fill="#687182"
+                  />
+                  <path
+                    d="M9.5 14C9.5 14.8284 8.82843 15.5 8 15.5C7.17157 15.5 6.5 14.8284 6.5 14C6.5 13.1716 7.17157 12.5 8 12.5C8.82843 12.5 9.5 13.1716 9.5 14Z"
+                    fill="#687182"
+                  />
+                </svg>
+                <mat-menu #menu="matMenu">
+                  <button
+                    mat-menu-item
+                    (click)="onRemoveProduct(data.product_id)"
+                  >
+                    <div class="flex gap-[7px] items-center">
+                      <svg width="20" height="20" viewBox="0 0 26 26">
+                        <rect width="26" height="26" fill="none" />
+                        <path
+                          fill="#FF3130"
+                          d="M11.5-.031c-1.958 0-3.531 1.627-3.531 3.594V4H4c-.551 0-1 .449-1 1v1H2v2h2v15c0 1.645 1.355 3 3 3h12c1.645 0 3-1.355 3-3V8h2V6h-1V5c0-.551-.449-1-1-1h-3.969v-.438c0-1.966-1.573-3.593-3.531-3.593zm0 2.062h3c.804 0 1.469.656 1.469 1.531V4H10.03v-.438c0-.875.665-1.53 1.469-1.53zM6 8h5.125c.124.013.247.031.375.031h3c.128 0 .25-.018.375-.031H20v15c0 .563-.437 1-1 1H7c-.563 0-1-.437-1-1zm2 2v12h2V10zm4 0v12h2V10zm4 0v12h2V10z"
+                        />
+                      </svg>
+                      <span
+                        class="font-inter text-[15px] font-medium leading-[20px] text-[#FF3130]"
+                        >Delete</span
+                      >
+                    </div>
+                  </button>
+                  <button
+                    mat-menu-item
+                    (click)="onEditProduct(data.product_id)"
+                  >
+                    <div class="flex gap-[7px] items-center">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 16 16"
+                        fill="#687182"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M13.0981 5.10827C12.6795 5.52693 12.4702 5.73626 12.2506 5.77677C12.0309 5.81728 11.8868 5.67315 11.5986 5.3849L10.6151 4.40144C10.3269 4.11319 10.1827 3.96906 10.2232 3.74946C10.2638 3.52985 10.4731 3.32052 10.8917 2.90186L11.1184 2.67522C11.537 2.25656 11.7464 2.04723 11.966 2.00672C12.1856 1.96621 12.3297 2.11034 12.618 2.39859L13.6014 3.38204C13.8897 3.6703 14.0338 3.81442 13.9933 4.03403C13.9528 4.25364 13.7434 4.46297 13.3248 4.88162L13.0981 5.10827Z"
+                          fill="#687182"
+                        />
+                        <path
+                          d="M2.95406 13.9107C2.4542 14.0029 2.20427 14.049 2.07763 13.9224C1.95099 13.7957 1.99709 13.5458 2.0893 13.0459L2.31175 11.84C2.35173 11.6233 2.37172 11.515 2.43005 11.4101C2.48838 11.3052 2.57913 11.2145 2.76064 11.033L8.31438 5.47921C8.73303 5.06056 8.94236 4.85123 9.16197 4.81072C9.38158 4.77021 9.5257 4.91433 9.81396 5.20259L10.7974 6.18604C11.0857 6.4743 11.2298 6.61842 11.1893 6.83803C11.1488 7.05764 10.9394 7.26697 10.5208 7.68562L4.96705 13.2394C4.78554 13.4209 4.69479 13.5116 4.58991 13.5699C4.48503 13.6283 4.37668 13.6483 4.15997 13.6882L2.95406 13.9107Z"
+                          fill="#687182"
+                        />
+                      </svg>
+
+                      <span
+                        class="font-inter text-[15px] font-medium leading-[20px] text-[#687182]"
+                        >Update</span
+                      >
+                    </div>
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+        <ng-template #noData>
+          <td
+            colspan="100%"
+            style="background: white"
+            class="flex flex-col justify-center gap-[15px] items-center mt-[7px] bg-[rgba(255, 255 , 255, 90)] h-[100%] shadow-sm rounded-[5px] p-[10px] w-[100%]"
+          >
+            <div
+              class="w-full max-w-md mx-auto h-64 bg-center bg-no-repeat bg-cover opacity-50"
+              style="
+                background-image: none;
+                background-image: url(https://cdni.iconscout.com/illustration/premium/thumb/sorry-item-not-found-illustration-download-in-svg-png-gif-file-formats--available-product-tokostore-pack-e-commerce-shopping-illustrations-2809510.png);
+              "
+            ></div>
+            <span
+              class="font-inter text-[18px] font-medium leading-[20px] text-[#687182] flex text-start"
+            >
+              No products yet</span
+            >
+          </td>
+        </ng-template>
+      </tbody>
+    </table>
+  </div>
+</div>
